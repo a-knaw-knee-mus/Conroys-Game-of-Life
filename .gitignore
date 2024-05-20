@@ -1,4 +1,6 @@
 cmake-build-debug/*
 !cmake-build-debug/sfml
 !cmake-build-debug/cpp_game_of_life.exe
+!cmake-build-debug/screenshots
+!cmake-build-debug/screenshots/*
 .idea
