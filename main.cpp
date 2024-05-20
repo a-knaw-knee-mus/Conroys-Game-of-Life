@@ -8,6 +8,7 @@
 #include "include/states.h"
 #include "include/conroy.h"
 #include "include/window.h"
+#include "include/presets.h"
 using namespace std;
 using namespace sf;
 
@@ -50,6 +51,7 @@ int main()
                 for (vector<cellState>& row: cellStates) {
                     row.resize(gridSize.y, Dead);
                 }
+                lastState.clear();
             }
             else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Down) {
                 if (cellSizeIdx-1 < 0) continue;
@@ -60,6 +62,7 @@ int main()
                 for (vector<cellState>& row: cellStates) {
                     row.resize(gridSize.y, Dead);
                 }
+                lastState.clear();
             }
 
             // add cells
@@ -80,7 +83,7 @@ int main()
 
             // reset to last position before a run was executed
             else if (event.type == Event::KeyReleased && event.key.code == Keyboard::R) {
-                cellStates = lastState;
+                if (!lastState.empty()) cellStates = lastState;
             }
 
             // delete all cells
@@ -90,6 +93,20 @@ int main()
                         cellStates[x][y] = Dead;
                     }
                 }
+            }
+
+            // set preset
+            else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Num1) {
+                flowerPreset1(cellStates);
+            }
+            else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Num2) {
+                flowerPreset2(cellStates);
+            }
+            else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Num3) {
+                flowerPreset3(cellStates);
+            }
+            else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Num4) {
+                barcode(cellStates);
             }
 
             // begin run
@@ -119,6 +136,7 @@ int main()
                 window.setTitle("Conroy's Game of Life");
             }
 
+            // save screenshot
             else if (event.type == Event::KeyReleased && event.key.code == Keyboard::P) {
                 Texture texture;
                 texture.create(window.getSize().x, window.getSize().y);
