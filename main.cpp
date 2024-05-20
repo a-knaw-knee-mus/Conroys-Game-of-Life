@@ -24,7 +24,7 @@ int main()
     RectangleShape cell{};
     cell.setSize(Vector2f(cellSize-1, cellSize-1));
     cell.setOutlineThickness(1);
-    cell.setOutlineColor(Color(192, 192, 192));
+    cell.setOutlineColor(Color(224, 224, 224));
 
     while(window.isOpen()) {
         Event event{};
