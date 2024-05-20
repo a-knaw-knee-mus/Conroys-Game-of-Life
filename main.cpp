@@ -5,13 +5,11 @@
 #include <ctime>
 #include <thread>
 #include <filesystem>
+#include "include/states.h"
+#include "include/conroy.h"
+#include "include/window.h"
 using namespace std;
 using namespace sf;
-
-enum cellState {
-    Dead,
-    Alive
-};
 
 int main()
 {
@@ -47,29 +45,50 @@ int main()
                 cellStates[cell.x][cell.y] = Dead;
             }
 
-            else if (event.type == Event::KeyPressed && event.key.code == Keyboard::R) {
+            else if (event.type == Event::KeyReleased && event.key.code == Keyboard::R) {
                 for (int x = 0; x < gridSize.x; ++x) {
                     for (int y = 0; y < gridSize.y; ++y) {
                         cellStates[x][y] = Dead;
                     }
                 }
             }
-        }
 
-        window.clear(Color::White);
-        for (int x=0; x<gridSize.x; x++) {
-            for (int y=0; y<gridSize.y; y++) {
-                cell.setPosition(x*cellSize+1, y*cellSize+1);
-                if (cellStates[x][y] == Dead) {
-                    cell.setFillColor(Color::White);
-                } else if (cellStates[x][y] == Alive) {
-                    cell.setFillColor(Color::Black);
+            else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Enter) {
+                for (int i=0; i<500; i++) {
+                    Event innerEvent{};
+                    bool stopLoop = false;
+                    while (window.pollEvent(innerEvent)) {
+                        if (innerEvent.type == Event::KeyReleased && innerEvent.key.code == Keyboard::Escape) {
+                            stopLoop = true;
+                            break;
+                        }
+                    }
+                    if (stopLoop) break;
+
+                    chrono::milliseconds duration(10);
+                    this_thread::sleep_for(duration);
+                    cellStates = updateCellStates(cellStates);
+                    refreshScreen(cellStates, cell, cellSize, gridSize, window);
                 }
-
-                window.draw(cell);
             }
         }
-        window.display();
+
+        refreshScreen(cellStates, cell, cellSize, gridSize, window);
+
+        // window.clear(Color::White);
+        // for (int x=0; x<gridSize.x; x++) {
+        //     for (int y=0; y<gridSize.y; y++) {
+        //         cell.setPosition(x*cellSize+1, y*cellSize+1);
+        //         if (cellStates[x][y] == Dead) {
+        //             cell.setFillColor(Color::White);
+        //         } else if (cellStates[x][y] == Alive) {
+        //             cell.setFillColor(Color::Black);
+        //         }
+        //
+        //         window.draw(cell);
+        //     }
+        // }
+        // window.display();
     }
 
     return 0;
