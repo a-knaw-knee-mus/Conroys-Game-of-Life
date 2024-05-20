@@ -118,6 +118,27 @@ int main()
                 }
                 window.setTitle("Conroy's Game of Life");
             }
+
+            else if (event.type == Event::KeyReleased && event.key.code == Keyboard::P) {
+                Texture texture;
+                texture.create(window.getSize().x, window.getSize().y);
+                texture.update(window);
+
+                time_t now = time(nullptr);
+                tm localTime = *localtime(&now);
+                stringstream ss;
+                ss << put_time(&localTime, "%Y-%m-%d_%H-%M-%S");
+                const string suffix = ss.str();
+
+                if (!filesystem::exists("screenshots")) {
+                    filesystem::create_directory("screenshots");
+                }
+                if (texture.copyToImage().saveToFile("screenshots/conroy-" + suffix + ".png")) {
+                    cout << "Screenshot saved" << endl;
+                } else {
+                    cerr << "Failed to save screenshot" << endl;
+                }
+            }
         }
 
         refreshScreen(cellStates, cell, cellSizes[cellSizeIdx], gridSize, window);
