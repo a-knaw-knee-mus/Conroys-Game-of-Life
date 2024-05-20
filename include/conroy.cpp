@@ -8,8 +8,6 @@ using namespace sf;
 bool updateCellStates(vector<vector<cellState>>& cellStates) {
     const int width = cellStates.size(), height = cellStates[0].size();
     const vector<vector<cellState>> currStates = cellStates;
-    bool atleastOneAlive = false;
-    bool stateChange = false;
 
     // Define possible movement directions (left, right, up, down, topleft, topright, bottomleft, bottomright)
     constexpr int dx[] = {-1, 1, 0, 0, -1, 1, -1, 1};
@@ -27,16 +25,14 @@ bool updateCellStates(vector<vector<cellState>>& cellStates) {
             if (currStates[x][y] == Alive) {
                 if (aliveNeighbors < 2 || aliveNeighbors > 3) {
                     cellStates[x][y] = Dead;
-                    stateChange = true;
                 }
             } else {
                 if (aliveNeighbors == 3) {
                     cellStates[x][y] = Alive;
-                    stateChange = true;
                 }
             }
         }
     }
 
-    return stateChange;
+    return currStates != cellStates; // if new state != old state, then there has been a state change; else no state change
 }

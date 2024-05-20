@@ -70,8 +70,8 @@ int main()
                     this_thread::sleep_for(duration);
                     const bool stateChange = updateCellStates(cellStates); // update cell states for next cycle; check if board changed
                     refreshScreen(cellStates, cell, cellSize, gridSize, window);
-                    if (!stateChange) {
-                        break; // stop if nothing changed this iteration
+                    if (!stateChange) { // stop if nothing changed this iteration
+                        break;
                     }
                 }
                 window.setTitle("Conroy's Game of Life");
