@@ -27,8 +27,6 @@ int main()
     cell.setOutlineThickness(1);
     cell.setOutlineColor(Color(192, 192, 192));
 
-    bool isLeftMousePressed=false, isRightMousePressed=false;
-
     while(window.isOpen()) {
         Event event{};
         while (window.pollEvent(event)) {
