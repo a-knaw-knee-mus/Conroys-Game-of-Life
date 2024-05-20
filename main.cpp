@@ -19,6 +19,7 @@ int main()
     int cellSizeIdx = 3;
     Vector2i gridSize = {windowSize.x/cellSizes[cellSizeIdx], windowSize.y/cellSizes[cellSizeIdx]};
     bool screenWrapping = true; // toroidal wrapping
+    bool showBoarders = true;
 
     RenderWindow window(VideoMode(windowSize.x+1, windowSize.y+1), "Conroy's Game of Life", Style::Titlebar | Style::Close);
     vector<vector<cellState>> cellStates(gridSize.x, vector<cellState>(gridSize.y, Dead));
@@ -39,6 +40,11 @@ int main()
             // toggle wrapping
             else if (event.type == Event::KeyReleased && event.key.code == Keyboard::W) {
                 screenWrapping = !screenWrapping;
+            }
+
+            // toggle borders
+            else if (event.type == Event::KeyReleased && event.key.code == Keyboard::B) {
+                showBoarders = !showBoarders;
             }
 
             // change cell size
@@ -128,7 +134,7 @@ int main()
                     chrono::milliseconds duration(10);
                     this_thread::sleep_for(duration);
                     const bool stateChange = updateCellStates(cellStates, screenWrapping); // update cell states for next cycle; check if board changed
-                    refreshScreen(cellStates, cell, cellSizes[cellSizeIdx], gridSize, window);
+                    refreshScreen(cellStates, cell, cellSizes[cellSizeIdx], gridSize, window, showBoarders);
                     if (!stateChange) { // stop if nothing changed this iteration
                         break;
                     }
@@ -159,7 +165,7 @@ int main()
             }
         }
 
-        refreshScreen(cellStates, cell, cellSizes[cellSizeIdx], gridSize, window);
+        refreshScreen(cellStates, cell, cellSizes[cellSizeIdx], gridSize, window, showBoarders);
     }
 
     return 0;
