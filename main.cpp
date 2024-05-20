@@ -68,10 +68,10 @@ int main()
 
                     chrono::milliseconds duration(10);
                     this_thread::sleep_for(duration);
-                    const bool allDead = updateCellStates(cellStates); // update cell states for next cycle; if none alive, done loop
+                    const bool stateChange = updateCellStates(cellStates); // update cell states for next cycle; check if board changed
                     refreshScreen(cellStates, cell, cellSize, gridSize, window);
-                    if (allDead) {
-                        break;
+                    if (!stateChange) {
+                        break; // stop if nothing changed this iteration
                     }
                 }
                 window.setTitle("Conroy's Game of Life");
