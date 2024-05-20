@@ -75,3 +75,29 @@ void barcode(vector<vector<cellState>>& cellStates) {
         i++;
     } while (true);
 }
+
+void glider(vector<vector<cellState>>& cellStates) {
+    resetCells(cellStates);
+
+    cellStates[2][1] = Alive;
+    cellStates[3][2] = Alive;
+    cellStates[3][3] = Alive;
+    cellStates[2][3] = Alive;
+    cellStates[1][3] = Alive;
+}
+
+void spaceship(vector<vector<cellState>>& cellStates) {
+    resetCells(cellStates);
+
+    const int middleY = cellStates[0].size()/2;
+
+    cellStates[1][middleY-1] = Alive;
+    cellStates[4][middleY-1] = Alive;
+    cellStates[5][middleY] = Alive;
+    cellStates[1][middleY+1] = Alive;
+    cellStates[5][middleY+1] = Alive;
+    cellStates[2][middleY+2] = Alive;
+    cellStates[3][middleY+2] = Alive;
+    cellStates[4][middleY+2] = Alive;
+    cellStates[5][middleY+2] = Alive;
+}

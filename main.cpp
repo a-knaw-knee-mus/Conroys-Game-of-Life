@@ -114,6 +114,18 @@ int main()
             else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Num4) {
                 barcode(cellStates);
             }
+            else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Num5) {
+                glider(cellStates);
+            }
+            else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Num6) {
+                spaceship(cellStates);
+            }
+
+            // animate one cycle
+            else if (event.type == Event::KeyPressed && event.key.code == Keyboard::N) {
+                const bool _ = updateCellStates(cellStates, screenWrapping); // update cell states for next cycle; check if board changed
+                refreshScreen(cellStates, cell, cellSizes[cellSizeIdx], gridSize, window, showBoarders);
+            }
 
             // begin run
             else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Enter) {
