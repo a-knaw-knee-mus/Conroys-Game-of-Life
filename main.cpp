@@ -21,6 +21,7 @@ int main()
 
     RenderWindow window(VideoMode(windowSize.x+1, windowSize.y+1), "Conroy's Game of Life", Style::Titlebar | Style::Close);
     vector<vector<cellState>> cellStates(gridSize.x, vector<cellState>(gridSize.y, Dead));
+    vector<vector<cellState>> lastState{}; // save position before running to reference back to
 
     RectangleShape cell{};
     cell.setSize(Vector2f(cellSizes[cellSizeIdx]-1, cellSizes[cellSizeIdx]-1));
@@ -77,8 +78,13 @@ int main()
                 cellStates[cellClicked.x][cellClicked.y] = Dead;
             }
 
-            // reset
+            // reset to last position before a run was executed
             else if (event.type == Event::KeyReleased && event.key.code == Keyboard::R) {
+                cellStates = lastState;
+            }
+
+            // delete all cells
+            else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Delete) {
                 for (int x = 0; x < gridSize.x; ++x) {
                     for (int y = 0; y < gridSize.y; ++y) {
                         cellStates[x][y] = Dead;
@@ -89,6 +95,7 @@ int main()
             // begin run
             else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Enter) {
                 window.setTitle("Conroy's Game of Life | Running");
+                lastState = cellStates;
                 while (true) {
                     Event innerEvent{};
                     bool stopLoop = false;
