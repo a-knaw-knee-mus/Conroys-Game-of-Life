@@ -16,6 +16,7 @@ int main()
     const Vector2i windowSize = {800, 500};
     const int cellSize = 10;
     const Vector2i gridSize = {windowSize.x/cellSize, windowSize.y/cellSize};
+    bool screenWrapping = true; // toroidal wrapping
 
     RenderWindow window(VideoMode(windowSize.x+1, windowSize.y+1), "Conroy's Game of Life", Style::Titlebar | Style::Close);
     vector<vector<cellState>> cellStates(gridSize.x, vector<cellState>(gridSize.y, Dead));
@@ -30,6 +31,11 @@ int main()
         while (window.pollEvent(event)) {
             if (event.type == Event::Closed) {
                 window.close();
+            }
+
+            // toggle wrapping
+            else if (event.type == Event::KeyReleased && event.key.code == Keyboard::W) {
+                screenWrapping = !screenWrapping;
             }
 
             // add cells
@@ -74,7 +80,7 @@ int main()
 
                     chrono::milliseconds duration(10);
                     this_thread::sleep_for(duration);
-                    const bool stateChange = updateCellStates(cellStates); // update cell states for next cycle; check if board changed
+                    const bool stateChange = updateCellStates(cellStates, screenWrapping); // update cell states for next cycle; check if board changed
                     refreshScreen(cellStates, cell, cellSize, gridSize, window);
                     if (!stateChange) { // stop if nothing changed this iteration
                         break;

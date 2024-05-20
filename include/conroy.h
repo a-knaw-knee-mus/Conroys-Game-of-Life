@@ -3,4 +3,4 @@
 #include <vector>
 using namespace std;
 
-bool updateCellStates(vector<vector<cellState>>& cellStates);
+bool updateCellStates(vector<vector<cellState>>& cellStates, const bool screenWrapping);
