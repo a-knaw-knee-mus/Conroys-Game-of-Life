@@ -4,10 +4,11 @@
 using namespace std;
 using namespace sf;
 
-// update alive and dead cells based on Conroy's  constraints
-vector<vector<cellState>> updateCellStates(vector<vector<cellState>> cellStates) {
+// update alive and dead cells based on Conroy's  constraints; return bool if there are no more cells alive
+bool updateCellStates(vector<vector<cellState>>& cellStates) {
     const int width = cellStates.size(), height = cellStates[0].size();
-    vector<vector<cellState>> updatedStates = cellStates;
+    const vector<vector<cellState>> currStates = cellStates;
+    bool atleastOneAlive = false;
 
     // Define possible movement directions (left, right, up, down, topleft, topright, bottomleft, bottomright)
     constexpr int dx[] = {-1, 1, 0, 0, -1, 1, -1, 1};
@@ -19,20 +20,21 @@ vector<vector<cellState>> updateCellStates(vector<vector<cellState>> cellStates)
             for (int i=0; i<8; i++) {
                 const Vector2i neighbor = {x+dx[i], y+dy[i]};
                 if (neighbor.x<0 || neighbor.x>=width || neighbor.y<0 || neighbor.y>=height) continue;
-                if (cellStates[neighbor.x][neighbor.y] == Alive) aliveNeighbors++;
+                if (currStates[neighbor.x][neighbor.y] == Alive) aliveNeighbors++;
             }
 
-            if (cellStates[x][y] == Alive) {
+            if (currStates[x][y] == Alive) {
                 if (aliveNeighbors < 2 || aliveNeighbors > 3) {
-                    updatedStates[x][y] = Dead;
+                    cellStates[x][y] = Dead;
                 }
             } else {
                 if (aliveNeighbors == 3) {
-                    updatedStates[x][y] = Alive;
+                    cellStates[x][y] = Alive;
+                    atleastOneAlive = true;
                 }
             }
         }
     }
 
-    return updatedStates;
+    return !atleastOneAlive;
 }

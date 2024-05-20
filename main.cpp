@@ -54,7 +54,8 @@ int main()
             }
 
             else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Enter) {
-                for (int i=0; i<500; i++) {
+                window.setTitle("Conroy's Game of Life | Running");
+                while (true) {
                     Event innerEvent{};
                     bool stopLoop = false;
                     while (window.pollEvent(innerEvent)) {
@@ -67,9 +68,13 @@ int main()
 
                     chrono::milliseconds duration(10);
                     this_thread::sleep_for(duration);
-                    cellStates = updateCellStates(cellStates);
+                    const bool allDead = updateCellStates(cellStates); // update cell states for next cycle; if none alive, done loop
                     refreshScreen(cellStates, cell, cellSize, gridSize, window);
+                    if (allDead) {
+                        break;
+                    }
                 }
+                window.setTitle("Conroy's Game of Life");
             }
         }
 
