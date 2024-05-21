@@ -158,6 +158,10 @@ int main() {
                 halfAliveRandom(cellStates);
                 resetVisited(visited);
             }
+            else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Num9) {
+                queenBeeShuttle(cellStates);
+                resetVisited(visited);
+            }
 
             // animate one cycle
             else if (event.type == Event::KeyPressed && event.key.code == Keyboard::N) {

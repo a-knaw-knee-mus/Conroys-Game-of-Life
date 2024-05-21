@@ -122,3 +122,28 @@ void halfAliveRandom(vector<vector<cellState>>& cellStates) {
         }
     }
 }
+
+void queenBeeShuttle(vector<vector<cellState>>& cellStates) {
+    resetCells(cellStates);
+
+    cellStates[2][5] = Alive;
+    cellStates[2][6] = Alive;
+    cellStates[3][5] = Alive;
+    cellStates[3][6] = Alive;
+    cellStates[7][5] = Alive;
+    cellStates[8][4] = Alive;
+    cellStates[8][6] = Alive;
+    cellStates[9][3] = Alive;
+    cellStates[9][7] = Alive;
+    cellStates[10][4] = Alive;
+    cellStates[10][5] = Alive;
+    cellStates[10][6] = Alive;
+    cellStates[11][2] = Alive;
+    cellStates[11][3] = Alive;
+    cellStates[11][7] = Alive;
+    cellStates[11][8] = Alive;
+    cellStates[22][4] = Alive;
+    cellStates[22][5] = Alive;
+    cellStates[23][4] = Alive;
+    cellStates[23][5] = Alive;
+}
