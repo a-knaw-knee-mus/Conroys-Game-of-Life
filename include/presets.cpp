@@ -101,3 +101,24 @@ void spaceship(vector<vector<cellState>>& cellStates) {
     cellStates[4][middleY+2] = Alive;
     cellStates[5][middleY+2] = Alive;
 }
+
+void rPentomino(vector<vector<cellState>>& cellStates) {
+    resetCells(cellStates);
+    Vector2i middleCoord = {int(cellStates.size()/2), int(cellStates[0].size()/2)};
+
+    cellStates[middleCoord.x][middleCoord.y-1] = Alive;
+    cellStates[middleCoord.x+1][middleCoord.y-1] = Alive;
+    cellStates[middleCoord.x][middleCoord.y] = Alive;
+    cellStates[middleCoord.x-1][middleCoord.y] = Alive;
+    cellStates[middleCoord.x][middleCoord.y+1] = Alive;
+}
+
+void halfAliveRandom(vector<vector<cellState>>& cellStates) {
+    for (int x=0; x<cellStates.size(); x++) {
+        for (int y=0; y<cellStates[0].size(); y++) {
+            int alive = rand() % 2;
+            if (alive == 0) cellStates[x][y] = Alive;
+            else cellStates[x][y] = Dead;
+        }
+    }
+}

@@ -120,6 +120,12 @@ int main()
             else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Num6) {
                 spaceship(cellStates);
             }
+            else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Num7) {
+                rPentomino(cellStates);
+            }
+            else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Num8) {
+                halfAliveRandom(cellStates);
+            }
 
             // animate one cycle
             else if (event.type == Event::KeyPressed && event.key.code == Keyboard::N) {

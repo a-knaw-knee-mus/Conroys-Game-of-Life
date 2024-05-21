@@ -11,3 +11,7 @@ void barcode(vector<vector<cellState>>& cellStates);
 void glider(vector<vector<cellState>>& cellStates);
 
 void spaceship(vector<vector<cellState>>& cellStates);
+
+void rPentomino(vector<vector<cellState>>& cellStates);
+
+void halfAliveRandom(vector<vector<cellState>>& cellStates);
