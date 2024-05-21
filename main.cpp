@@ -12,17 +12,24 @@
 using namespace std;
 using namespace sf;
 
-int main()
-{
+bool resetVisited(vector<vector<bool>>& visited) {
+    for (auto& row : visited) {
+        fill(row.begin(), row.end(), false);
+    }
+}
+
+int main() {
     const Vector2i windowSize = {800, 500};
     const vector<int> cellSizes = {4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30}; // px size per cell
     int cellSizeIdx = 3;
     Vector2i gridSize = {windowSize.x/cellSizes[cellSizeIdx], windowSize.y/cellSizes[cellSizeIdx]};
     bool screenWrapping = true; // toroidal wrapping
     bool showBoarders = true;
+    bool showVisited = false;;
 
     RenderWindow window(VideoMode(windowSize.x+1, windowSize.y+1), "Conroy's Game of Life", Style::Titlebar | Style::Close);
     vector<vector<cellState>> cellStates(gridSize.x, vector<cellState>(gridSize.y, Dead));
+    vector<vector<bool>> visited(gridSize.x, vector<bool>(gridSize.y, false));
     vector<vector<cellState>> lastState{}; // save position before running to reference back to
 
     RectangleShape cell{};
@@ -47,6 +54,11 @@ int main()
                 showBoarders = !showBoarders;
             }
 
+            // toggle envelope (any cell that has been visited atleast once)
+            else if (event.type == Event::KeyReleased && event.key.code == Keyboard::V) {
+                showVisited = !showVisited;
+            }
+
             // change cell size
             else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Up) {
                 if (cellSizeIdx+1 >= cellSizes.size()) continue;
@@ -54,8 +66,12 @@ int main()
                 gridSize = {windowSize.x/cellSizes[cellSizeIdx], windowSize.y/cellSizes[cellSizeIdx]};
 
                 cellStates.resize(gridSize.x);
-                for (vector<cellState>& row: cellStates) {
+                for (auto& row: cellStates) {
                     row.resize(gridSize.y, Dead);
+                }
+                visited.resize(gridSize.x);
+                for (auto& row: visited) {
+                    row.resize(gridSize.y, false);
                 }
                 lastState.clear();
             }
@@ -65,8 +81,12 @@ int main()
                 gridSize = {windowSize.x/cellSizes[cellSizeIdx], windowSize.y/cellSizes[cellSizeIdx]};
 
                 cellStates.resize(gridSize.x);
-                for (vector<cellState>& row: cellStates) {
+                for (auto& row: cellStates) {
                     row.resize(gridSize.y, Dead);
+                }
+                visited.resize(gridSize.x);
+                for (auto& row: visited) {
+                    row.resize(gridSize.y, false);
                 }
                 lastState.clear();
             }
@@ -77,6 +97,7 @@ int main()
                 Vector2i cellClicked = {mousePosition.x / cellSizes[cellSizeIdx], mousePosition.y / cellSizes[cellSizeIdx]};
                 if (cellClicked.x < 0 || cellClicked.x >= gridSize.x || cellClicked.y < 0 || cellClicked.y >= gridSize.y) continue;
                 cellStates[cellClicked.x][cellClicked.y] = Alive;
+                resetVisited(visited);
             }
 
             // delete cells
@@ -85,11 +106,13 @@ int main()
                 Vector2i cellClicked = {mousePosition.x / cellSizes[cellSizeIdx], mousePosition.y / cellSizes[cellSizeIdx]};
                 if (cellClicked.x < 0 || cellClicked.x >= gridSize.x || cellClicked.y < 0 || cellClicked.y >= gridSize.y) continue;
                 cellStates[cellClicked.x][cellClicked.y] = Dead;
+                resetVisited(visited);
             }
 
             // reset to last position before a run was executed
             else if (event.type == Event::KeyReleased && event.key.code == Keyboard::R) {
                 if (!lastState.empty()) cellStates = lastState;
+                resetVisited(visited);
             }
 
             // delete all cells
@@ -99,38 +122,47 @@ int main()
                         cellStates[x][y] = Dead;
                     }
                 }
+                resetVisited(visited);
             }
 
             // set preset
             else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Num1) {
                 flowerPreset1(cellStates);
+                resetVisited(visited);
             }
             else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Num2) {
                 flowerPreset2(cellStates);
+                resetVisited(visited);
             }
             else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Num3) {
                 flowerPreset3(cellStates);
+                resetVisited(visited);
             }
             else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Num4) {
                 barcode(cellStates);
+                resetVisited(visited);
             }
             else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Num5) {
                 glider(cellStates);
+                resetVisited(visited);
             }
             else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Num6) {
                 spaceship(cellStates);
+                resetVisited(visited);
             }
             else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Num7) {
                 rPentomino(cellStates);
+                resetVisited(visited);
             }
             else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Num8) {
                 halfAliveRandom(cellStates);
+                resetVisited(visited);
             }
 
             // animate one cycle
             else if (event.type == Event::KeyPressed && event.key.code == Keyboard::N) {
-                const bool _ = updateCellStates(cellStates, screenWrapping); // update cell states for next cycle; check if board changed
-                refreshScreen(cellStates, cell, cellSizes[cellSizeIdx], gridSize, window, showBoarders);
+                const bool _ = updateCellStates(cellStates, visited, screenWrapping); // update cell states for next cycle; check if board changed
+                refreshScreen(cellStates, visited, cell, cellSizes[cellSizeIdx], gridSize, window, showBoarders, showVisited);
             }
 
             // begin run
@@ -151,8 +183,8 @@ int main()
 
                     chrono::milliseconds duration(10);
                     this_thread::sleep_for(duration);
-                    const bool stateChange = updateCellStates(cellStates, screenWrapping); // update cell states for next cycle; check if board changed
-                    refreshScreen(cellStates, cell, cellSizes[cellSizeIdx], gridSize, window, showBoarders);
+                    const bool stateChange = updateCellStates(cellStates, visited, screenWrapping); // update cell states for next cycle; check if board changed
+                    refreshScreen(cellStates, visited, cell, cellSizes[cellSizeIdx], gridSize, window, showBoarders, showVisited);
                     if (!stateChange) { // stop if nothing changed this iteration
                         break;
                     }
@@ -183,7 +215,7 @@ int main()
             }
         }
 
-        refreshScreen(cellStates, cell, cellSizes[cellSizeIdx], gridSize, window, showBoarders);
+        refreshScreen(cellStates, visited, cell, cellSizes[cellSizeIdx], gridSize, window, showBoarders, showVisited);
     }
 
     return 0;
