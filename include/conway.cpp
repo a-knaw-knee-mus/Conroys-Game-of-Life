@@ -4,7 +4,7 @@
 using namespace std;
 using namespace sf;
 
-// update alive and dead cells based on Conroy's  constraints; return bool if there has been a state change
+// update alive and dead cells based on Conway's  constraints; return bool if there has been a state change
 bool updateCellStates(vector<vector<cellState>>& cellStates, vector<vector<bool>>& visited, const bool screenWrapping) {
     const int width = cellStates.size(), height = cellStates[0].size();
     const vector<vector<cellState>> currStates = cellStates;

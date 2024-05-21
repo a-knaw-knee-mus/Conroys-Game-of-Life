@@ -1,4 +1,4 @@
-# Conroy's Game of Life 
+# Conway's Game of Life 
 
 - Inspiration from the famous [Conway's game of life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life), a cell automation simulator
 - Setup an initial position, and watch how it will change overtime!

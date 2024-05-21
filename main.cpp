@@ -6,7 +6,7 @@
 #include <thread>
 #include <filesystem>
 #include "include/states.h"
-#include "include/conroy.h"
+#include "include/conway.h"
 #include "include/window.h"
 #include "include/presets.h"
 using namespace std;
@@ -27,7 +27,7 @@ int main() {
     bool showBoarders = true;
     bool showVisited = false;;
 
-    RenderWindow window(VideoMode(windowSize.x+1, windowSize.y+1), "Conroy's Game of Life", Style::Titlebar | Style::Close);
+    RenderWindow window(VideoMode(windowSize.x+1, windowSize.y+1), "Conway's Game of Life", Style::Titlebar | Style::Close);
     vector<vector<cellState>> cellStates(gridSize.x, vector<cellState>(gridSize.y, Dead));
     vector<vector<bool>> visited(gridSize.x, vector<bool>(gridSize.y, false));
     vector<vector<cellState>> lastState{}; // save position before running to reference back to
@@ -43,6 +43,17 @@ int main() {
             if (event.type == Event::Closed) {
                 window.close();
             }
+
+            // // print alive coords for making new presets
+            // else if (event.type == Event::KeyReleased && event.key.code == Keyboard::D) {
+            //     for (int x=0; x<cellStates.size(); x++) {
+            //         for (int y=0; y<cellStates[0].size(); y++) {
+            //             if (cellStates[x][y] == Alive) {
+            //                 cout << "cellStates[" << x << "][" << y << "] = Alive;" << endl;
+            //             }
+            //         }
+            //     }
+            // }
 
             // toggle wrapping
             else if (event.type == Event::KeyReleased && event.key.code == Keyboard::W) {
@@ -171,7 +182,7 @@ int main() {
 
             // begin run
             else if (event.type == Event::KeyReleased && event.key.code == Keyboard::Enter) {
-                window.setTitle("Conroy's Game of Life | Running");
+                window.setTitle("Conway's Game of Life | Running");
                 lastState = cellStates;
                 while (true) {
                     Event innerEvent{};
@@ -193,7 +204,7 @@ int main() {
                         break;
                     }
                 }
-                window.setTitle("Conroy's Game of Life");
+                window.setTitle("Conway's Game of Life");
             }
 
             // save screenshot
@@ -211,7 +222,7 @@ int main() {
                 if (!filesystem::exists("screenshots")) {
                     filesystem::create_directory("screenshots");
                 }
-                if (texture.copyToImage().saveToFile("screenshots/conroy-" + suffix + ".png")) {
+                if (texture.copyToImage().saveToFile("screenshots/conway-" + suffix + ".png")) {
                     cout << "Screenshot saved" << endl;
                 } else {
                     cerr << "Failed to save screenshot" << endl;

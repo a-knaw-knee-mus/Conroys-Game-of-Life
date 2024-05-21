@@ -3,7 +3,7 @@ project(cpp_game_of_life)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(cpp_game_of_life main.cpp include/conroy.cpp include/window.cpp include/presets.cpp)
+add_executable(cpp_game_of_life main.cpp include/conway.cpp include/window.cpp include/presets.cpp)
 
 set(SFML_STATIC_LIBRARIES TRUE)
 set(SFML_DIR /sfml)
